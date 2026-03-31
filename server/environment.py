@@ -2,6 +2,7 @@
 
 from openenv.core.env_server import Environment
 from models import EmailAction,EmailObservation,EmailState 
+from rewards import calculate_reward
 
 class EmailEnvironment(Environment):
     def __init__(self):
@@ -26,16 +27,8 @@ class EmailEnvironment(Environment):
         #increment step count
         self._state.step_count+=1
         response = action.reply.lower()
-        reward =0
-        #reward logic 
-        if "refund" in response:
-            reward+=0.4
-        if "apologize" in response or "sorry" in response:
-            reward+=0.3
-        if "help" in response:
-            reward+=0.2
-        if "compensate" in response:
-            reward+=0.1
+        reward = calculate_reward(self.current_email,action["reply"])
+     
         #episode ends
         done=True
 
