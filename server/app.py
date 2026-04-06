@@ -8,7 +8,7 @@ from fastapi import FastAPI
 app = FastAPI()
 env = EmailEnvironment()
 
-@app.get("/reset",response_model=EmailObservation)
+@app.post("/reset",response_model=EmailObservation)
 def reset():
     return env.reset()
 
