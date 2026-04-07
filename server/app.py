@@ -1,32 +1,40 @@
-#api endpoints for the server
-#manual method 
-
-from models import EmailAction,EmailObservation
-from server.environment import EmailEnvironment
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI()
-env = EmailEnvironment()
-
-@app.post("/reset",response_model=EmailObservation)
-def reset():
-    return env.reset()
-
-@app.post("/step",response_model=EmailObservation)
-def step(action:EmailAction):
-    return env.step(action)
+from openenv.core.env_server import create_fastapi_app
+from env.env import EmailEnvironment
+from env.models import EmailAction, EmailObservation
 
 
-
-#automatic method
-'''from server.environment import EmailEnvironment
-from openenv.core.env_server import create_fastapi_app 
-from models import EmailAction,EmailObservation
-
-
-
-app=create_fastapi_app(
+#Create OpenEnv API
+app = create_fastapi_app(
     EmailEnvironment,
     action_cls=EmailAction,
     observation_cls=EmailObservation
-)'''
+)
+
+
+# Enable CORS for UI
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], 
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+#home route
+@app.get("/")
+def home():
+    return {
+        "message": "Email Support RL Environment is running 🚀",
+        "endpoints": {
+            "reset": "/reset",
+            "step": "/step"
+        }
+    }
+
+ 
+
+
