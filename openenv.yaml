@@ -1,21 +1,13 @@
 name: email-support-env
 
-description: >
-  A reinforcement learning environment simulating real-world customer
-  support email interactions. Agents must respond to user emails,
-  handle follow-ups, and resolve issues across multiple steps.
-
 entrypoint: env.env:EmailEnvironment
 
 tasks:
   - name: easy_basic_response
-    description: Respond politely with at least one relevant keyword
     difficulty: easy
 
   - name: medium_followup_handling
-    description: Handle multi-step email conversation with context awareness
     difficulty: medium
 
   - name: hard_complex_resolution
-    description: Resolve complaints/refunds with strong and complete responses
     difficulty: hard

@@ -1,0 +1,19 @@
+[project]
+name = "email-support-env"
+version = "0.1.0"
+description = "Email support RL environment"
+authors = [{ name = "Keerthy" }]
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "pydantic",
+    "openenv-core",
+    "requests",
+    "openai"
+]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+[project.scripts]
+server = "server.app:main"

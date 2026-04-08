@@ -1,14 +1,28 @@
-# 📧 EmailEnv
+# Email Support RL Environment
 
-AI Customer Support Environment built using OpenEnv for training agents with reinforcement learning.
+## Description
+Simulates real-world customer support email interactions.
 
-Simulates real-world customer emails (orders, refunds, complaints) where an AI agent generates responses and receives rewards based on correctness, tone, and relevance.
+## Tasks
+- Easy: basic polite response
+- Medium: multi-step conversation
+- Hard: full issue resolution
 
-### ⚡ RL Flow
+## Action Space
+Agent sends a reply string.
 
-Email → AI Reply → Reward → Improvement
+## Observation Space
+Email text + metadata.
 
-### 🚀 Why this matters
+## Reward
+Keyword matching, politeness, resolution quality.
 
-Moves beyond static prompts to environment-based learning for real-world AI support systems.
+## Run
 
+uvicorn server.app:app --reload  
+python inference.py
+
+## Docker
+
+docker build -t email-env .  
+docker run -p 8000:8000 email-env
