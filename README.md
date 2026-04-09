@@ -36,3 +36,7 @@ Good Response:
 
 Bad Response:
 "Ok noted"
+
+screenshot 
+
+<img width="781" height="607" alt="image" src="https://github.com/user-attachments/assets/8314675c-8fab-4f2f-a599-92f602d7747f" />
