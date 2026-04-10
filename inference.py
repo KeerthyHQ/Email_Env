@@ -1,21 +1,21 @@
 import requests
 import os
 
-API_BASE_URL = "http://127.0.0.1:8000"
-MODEL_NAME = "rule-based"
+API_BASE_URL = os.getenv("API_BASE_URL", "http://127.0.0.1:8000")
+MODEL_NAME = os.getenv("MODEL_NAME", "rule-based")
 
 
 def log_start():
-    print(f"[START] task=email_support env=email-support model={MODEL_NAME}")
+    print(f"[START] task=email_support env=email-support model={MODEL_NAME}",flush=True)
 
 
 def log_step(step, action, reward, done):
-    print(f"[STEP] step={step} action={action} reward={reward:.2f} done={str(done).lower()} error=null")
+    print(f"[STEP] step={step} action={action} reward={reward:.2f} done={str(done).lower()} error=null",flush=True)
 
 
 def log_end(success, steps, score, rewards):
     rewards_str = ",".join([f"{r:.2f}" for r in rewards])
-    print(f"[END] success={str(success).lower()} steps={steps} score={score:.2f} rewards={rewards_str}")
+    print(f"[END] success={str(success).lower()} steps={steps} score={score:.2f} rewards={rewards_str}",flush=True)
 
 
 def get_reply(email):
@@ -38,10 +38,13 @@ def run():
 
     rewards = []
     steps = 0
+    score=0.0
+    success = False
 
     try:
         # RESET
         res = requests.post(f"{API_BASE_URL}/reset")
+        res.raise_for_status()  #catch HTTP errors
         data = res.json()
 
         email = data["observation"]["email"]
@@ -68,10 +71,16 @@ def run():
 
             log_step(steps, reply, reward, done)
 
-        score = min(sum(rewards) / len(rewards), 1.0) if rewards else 0.0
+        if rewards:
+            score = min(sum(rewards) / len(rewards), 1.0) 
+            
+        else :
+            score=0.0
+
         success = score > 0.1
 
-    except Exception:
+    except Exception as e:
+        print(f"[ERROR] {e}")
         success = False
 
     log_end(success, steps, score, rewards)
