@@ -1,38 +1,39 @@
-import requests
 import os
-from  openai import OpenAI
+import requests
 
-API_BASE_URL = os.getenv("API_BASE_URL")
-API_KEY = os.getenv("API_KEY")
-MODEL_NAME = os.getenv("MODEL_NAME") or "gpt-3.5-turbo"
-
-client = OpenAI(
-    base_url=API_BASE_URL,
-    api_key=API_KEY
-)
-    
 
 def log_start():
-    print(f"[START] task=email_support env=email-support model={MODEL_NAME}",flush=True)
+    print(f"[START] task=email_support env=email-support model={os.getenv('MODEL_NAME','gpt-3.5-turbo')}", flush=True)
 
 
 def log_step(step, action, reward, done):
-    print(f"[STEP] step={step} action={action} reward={reward:.2f} done={str(done).lower()} error=null",flush=True)
+    print(
+        f"[STEP] step={step} action={action} reward={reward:.2f} done={str(done).lower()} error=null",
+        flush=True,
+    )
 
 
 def log_end(success, steps, score, rewards):
     rewards_str = ",".join([f"{r:.2f}" for r in rewards])
-    print(f"[END] success={str(success).lower()} steps={steps} score={score:.2f} rewards={rewards_str}",flush=True)
-
-
+    print(
+        f"[END] success={str(success).lower()} steps={steps} score={score:.2f} rewards={rewards_str}",
+        flush=True,
+    )
 
 def get_llm_reply(email):
     try:
+        from openai import OpenAI
+
+        client = OpenAI(
+            base_url=os.environ["API_BASE_URL"],
+            api_key=os.environ["API_KEY"],
+        )
+
         response = client.chat.completions.create(
-            model=MODEL_NAME,
+            model=os.environ.get("MODEL_NAME", "gpt-3.5-turbo"),
             messages=[
                 {"role": "system", "content": "You are a helpful customer support agent."},
-                {"role": "user", "content": f"Customer email: {email}\nWrite a helpful reply."}
+                {"role": "user", "content": f"Customer email: {email}\nWrite a helpful reply."},
             ],
             temperature=0.7,
             max_tokens=100,
@@ -62,9 +63,11 @@ def run():
         email = data["observation"]["email"]
         done = False
 
+        # STEP LOOP
         while not done and steps < 3:
             steps += 1
 
+            #  CALL LLM PROXY
             reply = get_llm_reply(email)
 
             res = requests.post(
@@ -83,6 +86,7 @@ def run():
 
             log_step(steps, reply, reward, done)
 
+        # SCORE
         if rewards:
             score = min(sum(rewards) / len(rewards), 1.0)
 
