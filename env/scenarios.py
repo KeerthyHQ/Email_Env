@@ -1,17 +1,27 @@
 EMAIL_SCENARIOS = [
     {
-        "email": "I received a damaged product. I want a refund.",
-        "expected_keywords": ["refund", "return", "sorry"],
-        "difficulty_multiplier": 2
+        "email": "I want a refund",
+        "expected_keywords": ["refund"],
+        "difficulty_multiplier": 1.0
     },
     {
-        "email": "My order hasn’t arrived yet. What’s the status?",
-        "expected_keywords": ["order", "status", "delivery", "check"],
-        "difficulty_multiplier": 1.5
+        "email": "My order is delayed",
+        "expected_keywords": ["order", "delay"],
+        "difficulty_multiplier": 1.0
     },
     {
-        "email": "I can’t log into my account.",
-        "expected_keywords": ["account", "password", "reset"],
-        "difficulty_multiplier": 1.5
-    }
+        "email": "I received damaged product",
+        "expected_keywords": ["refund", "replace"],
+        "difficulty_multiplier": 1.2
+    },
+    {
+        "email": "I can't login",
+        "expected_keywords": ["reset", "password"], 
+        "difficulty_multiplier": 1.0
+    },
+    {
+        "email": "Payment failed", 
+        "expected_keywords": ["payment", "retry"], 
+        "difficulty_multiplier": 1.1
+    },
 ]
