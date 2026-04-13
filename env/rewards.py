@@ -33,8 +33,7 @@ def calculate_reward(context, reply):
         reward += 0.5
 
     # normalize 
-    
-    reward = min(reward, 3.0)   # raw reward
-    reward = reward / 3.0      
+    reward = max(0.01, min(reward / 3.0, 0.99))
+        
 
     return reward, matches
